@@ -62,7 +62,7 @@ anns = pd.read_csv(os.path.join(ROOT_DIR, 'stage_1_train_labels.csv'))
 #aws set up
 #anns = pd.read_csv('stage_1_train_labels.csv')
 
-observations=anns.iloc[:1000]
+observations=anns
 
 def patient_info(patientId): 
 
