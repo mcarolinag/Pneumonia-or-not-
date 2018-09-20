@@ -80,7 +80,7 @@ def patient_info(patientId):
 
 info_by_patient=observations[['patientId','Target']]#,'image']]
 
-info_by_patient=info_by_patient.drop_duplicates(subset=['patientId'],keep=False)
+info_by_patient=info_by_patient.drop_duplicates(subset=['patientId'])
 
 info_by_patient=info_by_patient.reset_index()
 
