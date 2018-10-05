@@ -4,6 +4,9 @@
 Created on Fri Aug 31 11:01:28 2018
 
 @author: carolina
+
+info: this code: reads the x-ray images, converts them into numerical arrays with the format that can be input to VGG16, 
+instanciates and trains the modified model, and saves results.
 """
 
 
@@ -49,18 +52,8 @@ import h5py
 # Root directory of the project
 ROOT_DIR = os.path.abspath('./data')
 
-# Directory to save logs and trained model
-#MODEL_DIR = os.path.join(ROOT_DIR, 'logs')
-
-# directoy for train and test images
-train_dicom_dir = os.path.join(ROOT_DIR, 'stage_1_train_images')
-#test_dicom_dir = os.path.join(ROOT_DIR, 'stage_1_test_images')
-
-# training dataset
+# dataset
 anns = pd.read_csv(os.path.join(ROOT_DIR, 'stage_1_train_labels.csv'))
-
-#aws set up
-#anns = pd.read_csv('stage_1_train_labels.csv')
 
 observations=anns
 
@@ -71,14 +64,14 @@ def patient_info(patientId):
     image_file = ds.pixel_array
     
     # reshapes to model input
-    image_file = resize(image_file,(224, 224,3))#, preserve_range=True).astype(np.float32)
+    image_file = resize(image_file,(224, 224,3))
     
     img_arr = np.asarray(image_file)
 
     return img_arr
 
 
-info_by_patient=observations[['patientId','Target']]#,'image']]
+info_by_patient=observations[['patientId','Target']]
 
 info_by_patient=info_by_patient.drop_duplicates(subset=['patientId'])
 
@@ -115,7 +108,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 model_vgg16_conv = VGG16(weights='imagenet', include_top=False)
 model_vgg16_conv.summary()
 
-#Create your own input format (here 224x224x3)#Create  
+#Create your own input format (here 224x224x3) 
 input = Input(shape=(224, 224,3),name = 'image_input')
 
 # makes the layers non-trainable
