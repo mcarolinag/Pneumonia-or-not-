@@ -7,6 +7,8 @@ Created on Fri Aug 31 11:01:28 2018
 
 info: this code: reads the x-ray images, converts them into numerical arrays with the format that can be input to VGG16, 
 instanciates and trains the modified model, and saves results.
+
+AWS EC2 instance: Deep Learning AMI (Amazon Linux) Version 13.0, p3.8xlarge. p.36
 """
 
 
@@ -155,7 +157,4 @@ roc = metrics.auc(fpr, tpr)
 VGG16sum=pd.DataFrame({'fpr':fpr,'tpr':tpr,'roc':roc})
 
 pickle.dump(VGG16sum,open('VGG16sum.pkl', 'wb'))
-
-print('roc',roc)
-
 
