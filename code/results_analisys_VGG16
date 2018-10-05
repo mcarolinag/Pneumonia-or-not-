@@ -3,7 +3,7 @@
 """
 Created on Sat Sep  8 23:49:44 2018
 
-@author: carolina
+@author: Carolina
 """
 
 #######reading locally results afte aws calculations
@@ -16,20 +16,19 @@ with open('ResNet50sum50drp.pkl', 'rb') as handle:
 with open('y_pred_test.pkl', 'rb') as handle:
     y_pred_test= pickle.load(handle)
 
-
+#plotting ROC curves
 plt.figure(figsize= [10,10])
 # Plotting our Baseline..
 plt.plot([0,1],[0,1])
+#plotting model results
 plt.plot(VGG16sum['fpr'],VGG16sum['tpr'],label='VGG16', color='royalblue', linewidth=5.0)
 plt.plot(ResNet50sum50drp['fpr'],ResNet50sum50drp['tpr'],label='ResNet50', color= 'grey', linewidth=5.0)
-#plt.plot(roc_info['fpr'],roc_info['tpr'],label='ResNet50')
 
+#formattinf labels
 plt.xlabel('FPR', size = 30)
 plt.ylabel('TPR', size = 30,rotation = 0,labelpad = 35)
 plt.legend(loc='best',prop={'size': 30})
 plt.title("ROC curves for main models", size = 40)
-# plt.xlabel('Coefficients', size = 15, labelpad = 15)
-# plt.ylabel('Variables        ', size = 20, rotation = 0, labelpad = 35)
 plt.xticks(size=25)
 plt.yticks(size=25)
 ax = plt.gca()
@@ -37,32 +36,20 @@ ax.yaxis.set_label_coords(-0.06,0.97)
 ttl = ax.title
 ttl.set_position([.5, 1.05]);
 
-ResNet50sum50drp.info()
- 
-!ls
-y_pred_test.info()
-
-y_pred_test[0][j]
-
 y_pred_test=pd.DataFrame(y_pred_test)
 
 recall_score_VGG16 =[]
 precision_score_VGG16=[]
 f1_score_VGG16=[]
 
+# estimating model metrics
 for i in np.linspace(0,1,100):
-    #for j in range(len(y_pred_test)):
-    #    if y_pred_test[0][j]>=i:
-    #        y_score.iloc[j]= 1
-    #    else:y_score.iloc[j]= 0  
     y_score =y_pred_test[0] >i
     precision_score_VGG16.append(metrics.precision_score(y_test_vgg16, y_score))#, labels=None, pos_label=1, average=’binary’, sample_weight=None)
     recall_score_VGG16.append(metrics.recall_score(y_test_vgg16, y_score))
     f1_score_VGG16.append(metrics.f1_score(y_test_vgg16, y_score))
 
-    
-
-
+# plotting metrics  vs. threshold
 plt.figure(figsize= [10,10])
 x=np.linspace(0,1,100)
 y=recall_score_VGG16
@@ -76,7 +63,6 @@ plt.plot(x,y2,label='VGG16_precision',color='royalblue')
 plt.plot(x,y3,label='VGG16_f1_score',color='tomato')
 #plt.axvline(0.215, color='gold', linestyle='solid')
 plt.title("Metrics vs. Threshold  \n", size = 25)
-
 plt.xlabel('Threshold', size = 20, labelpad = 15)
 plt.ylabel('Metrics \n ', size = 20, rotation = 0, labelpad = 35)
 plt.xticks(size=20)
@@ -85,24 +71,23 @@ ax = plt.gca()
 ax.yaxis.set_label_coords(-0.06,0.97)
 plt.legend(loc='best',prop={'size': 20});
 
+# estimating therhold that would maximize the F1 score
 ind=np.argmax(f1_score_VGG16)
 tsh=list(np.linspace(0,1,100))[ind]
 
-
+# estimating F1_score for estimated threshold
 y_score =y_pred_test[0] >tsh
-# y_ac_predlogn=log_ac_n.predict_proba(X1_test_n)[:,1] >x[np.argmax(roc_auc_ac_n)]
 
 f1VGG16=metrics.f1_score(y_test_vgg16, y_score)
- 
+
+# estimatting confusion matrix
 cm_VGG16=metrics.confusion_matrix(y_test_vgg16, y_score)
 
+#plotting confusion mattrix
 cm_VGG16
 
+# looking at classification report
 print(metrics.classification_report(y_test_vgg16, y_score))
 
+#estimating accuracy
 VGGaccuracy=metrics.accuracy_score(y_test_vgg16, y_score)
-
-#if prob<0.01 --> no sick
-#if
-
-plt.hist(y_pred_test[0])
