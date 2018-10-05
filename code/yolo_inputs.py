@@ -4,6 +4,8 @@
 Created on Sat Sep  1 19:26:57 2018
 
 @author: carolina
+
+Info: This file creates the imputs for training the yolo model. 
 """
 import numpy as np
 import pandas as pd
